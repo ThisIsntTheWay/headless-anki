@@ -20,6 +20,15 @@ docker run -e QT_QPA_PLATFORM="vnc" ...
 ```
 
 ## Building
+To quickly build the image, issue:
 ```bash
 docker build --progress=plain . -t anki-headless:test
 ```
+
+Different versions of Anki and/or QT can be installed.  
+Supply these versions as build flags:
+```bash
+docker build --build-arg ANKI_VERSION=23.12.1 --build-arg QT_VERSION=6 ...
+```
+
+For available versions, refer to [Ankis GitHub releases](https://github.com/ankitects/anki/releases).
