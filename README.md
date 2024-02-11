@@ -11,13 +11,18 @@ Creates the following volumes that could be further exposed by the user:
 ## Usage
 To run, execute:
 ```bash
-docker run -it --rm -p 8765:8765 -v $(pwd)/export:/export thisisnttheway/headless-anki:latest
+docker run -d -p 5900:5900 -p 8765:8765 -v $(pwd)/export:/export thisisnttheway/headless-anki:latest
+#             ^^^^^^^^^^^^ if using QT_QPA_PLATFORM="vnc"
 ```
 
 You can also use other QT platform plugins by setting the env var `QT_QPA_PLATFORM`:
 ```bash
-docker run -e QT_QPA_PLATFORM="vnc" ...
+docker run -e QT_QPA_PLATFORM="offscreen" ...
 ```
+
+By default, Anki will be launched using `QT_QPA_PLATFORM="vnc"`.  
+This will enable Anki to be accessed using a VNC viewer, provided port `5900` is forwarded:  
+![](images/vnc_gui.png)
 
 ## Building
 To quickly build the image, issue:
