@@ -5,14 +5,16 @@ on:
     types: [published]
   push:
     branches:
-    - 'main'
+      - 'main'
     paths-ignore:
-    - '*.md'
+      - '*.md'
+      - 'images/**'
   pull_request:
     branches:
-    - 'master'
+      - 'master'
     paths-ignore:
-    - '*.md'
+      - '*.md'
+      - 'images/**'
 
 jobs:
   push_to_registry:
