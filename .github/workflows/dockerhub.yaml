@@ -1,0 +1,46 @@
+name: Publish Docker image
+
+on:
+  release:
+    types: [published]
+  push:
+    branches:
+    - 'master'
+    paths-ignore:
+    - '*.md'
+  pull_request:
+    branches:
+    - 'master'
+    paths-ignore:
+    - '*.md'
+
+jobs:
+  push_to_registry:
+    name: Push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repo checkout
+        uses: actions/checkout@v4
+
+      - name: Docker login
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        with:
+          username: thisisnttheway
+          password: ${{ secrets.DOCKER_HUB_SECRET }}
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ github.repository }}
+          tags: |
+            type=ref,event=branch
+            type=sha
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
