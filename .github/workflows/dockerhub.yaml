@@ -35,6 +35,7 @@ jobs:
           images: ${{ github.repository }}
           tags: |
             type=ref,event=branch
+            type=pep440,pattern={{version}}
             type=sha
 
       - name: Build and push
