@@ -50,7 +50,8 @@ RUN jq '.webBindAddress = "0.0.0.0"' /data/addons21/AnkiConnectDev/config.json >
 
 USER anki
 
-ENV QMLSCENE_DEVICE softwarecontext
+ENV QMLSCENE_DEVICE=softwarecontext
+ENV FONTCONFIG_PATH=/etc/fonts
 ENV QT_XKB_CONFIG_ROOT=/usr/share/X11/xkb
 ENV QT_QPA_PLATFORM="vnc"
 # Could also use "offscreen"
