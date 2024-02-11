@@ -35,7 +35,8 @@ jobs:
           images: ${{ github.repository }}
           tags: |
             type=ref,event=branch
-            type=pep440,pattern={{version}}
+            type=ref,event=tag
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
             type=sha
 
       - name: Build and push
