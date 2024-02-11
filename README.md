@@ -11,7 +11,7 @@ Creates the following volumes that could be further exposed by the user:
 ## Usage
 To run, execute:
 ```bash
-docker run -it --rm -p 8765:8765 -v $(pwd)/export:/export anki-headless:test
+docker run -it --rm -p 8765:8765 -v $(pwd)/export:/export thisisnttheway/headless-anki:latest
 ```
 
 You can also use other QT platform plugins by setting the env var `QT_QPA_PLATFORM`:
@@ -22,7 +22,7 @@ docker run -e QT_QPA_PLATFORM="vnc" ...
 ## Building
 To quickly build the image, issue:
 ```bash
-docker build --progress=plain . -t anki-headless:test
+docker build --progress=plain . -t headless-anki:test
 ```
 
 Different versions of Anki and/or QT can be installed.  
