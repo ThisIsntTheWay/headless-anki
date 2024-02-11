@@ -4,7 +4,7 @@ ARG ANKI_VERSION=23.12.1
 ARG QT_VERSION=6
 
 RUN apt update && apt install --no-install-recommends -y \
-        wget zstd mpv locales curl git ca-certificates libxcb-xinerama0 libxcb-cursor0 libnss3 \
+        wget zstd mpv locales curl git ca-certificates jq libxcb-xinerama0 libxcb-cursor0 libnss3 \
         libxcomposite-dev libxdamage-dev libxtst-dev libxkbcommon-dev libxkbfile-dev
 RUN useradd -m anki
 
@@ -43,6 +43,10 @@ RUN git clone -n --depth=1 --filter=tree:0 \
         https://git.foosoft.net/alex/anki-connect.git && \
         cd anki-connect && git sparse-checkout set --no-cone plugin && git checkout
 RUN ln -s -f /app/anki-connect/plugin /data/addons21/AnkiConnectDev
+
+# Edit AnkiConnect config
+RUN jq '.webBindAddress = "0.0.0.0"' /data/addons21/AnkiConnectDev/config.json > tmp_file && \
+    mv tmp_file /data/addons21/AnkiConnectDev/config.json
 
 USER anki
 
