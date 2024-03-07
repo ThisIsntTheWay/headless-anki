@@ -37,10 +37,10 @@ To quickly build the image, issue:
 docker build --progress=plain . -t headless-anki:test
 ```
 
-Different versions of Anki and/or QT can be installed.  
+Different versions of each component (Anki, QT, AnkiConnect) can be installed.  
 Supply these versions as build flags:
 ```bash
-docker build --build-arg ANKI_VERSION=23.12.1 --build-arg QT_VERSION=6 ...
+docker build --build-arg ANKI_VERSION=23.12.1 --build-arg QT_VERSION=6 --build-arg ANKICONNECT_VERSION=24.1.21.0 ...
 ```
 
 For available versions, refer to [Ankis GitHub releases](https://github.com/ankitects/anki/releases).
