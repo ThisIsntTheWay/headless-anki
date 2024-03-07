@@ -1,19 +1,26 @@
 # Headless Anki
 Headless Anki with the AnkiConnect plugin installed.  
-The goal of this thing is to have a headless Anki instance ready for use in automation workflows.  
+Useful in automation workflows.
 
-The default user profile is as barebones as it could get.
+The default user profile is as barebones as it can get.
 
-Creates the following volumes that could be further exposed by the user:
+Creates the following volumes that can be further exposed by the user:
 - `/data`: Anki data (Profile, decks etc.).
-- `/export`: Potential folder to be used for exporting Anki decks, e.g. using the AnkiConnect API.
+- `/export`: Path that can be used for exporting Anki decks, e.g. using the AnkiConnect API.
 
 ## Usage
 To run, execute:
 ```bash
-docker run -d -p 5900:5900 -p 8765:8765 -v $(pwd)/export:/export thisisnttheway/headless-anki:latest
-#             ^^^^^^^^^^^^ if using QT_QPA_PLATFORM="vnc"
+docker run -d -p 8765:8765 -v $(pwd)/export:/export thisisnttheway/headless-anki:latest
 ```
+
+To bring your own Anki profile, mount it on `/data` in the container:
+```bash
+docker run -d -v ~/.local/share/Anki2:/data thisisnttheway/headless-anki:latest
+```
+
+> [!WARNING]
+> Make sure that your AnkiConnect configuration doesn't have a listen address of `localhost`.
 
 You can also use other QT platform plugins by setting the env var `QT_QPA_PLATFORM`:
 ```bash
