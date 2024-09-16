@@ -1,8 +1,8 @@
 FROM debian:12.4-slim
 
-ARG ANKI_VERSION=23.12.1
+ARG ANKICONNECT_VERSION=24.7.25.0
+ARG ANKI_VERSION=24.06.3
 ARG QT_VERSION=6
-ARG ANKICONNECT_VERSION=24.1.21.0
 
 RUN apt update && apt install --no-install-recommends -y \
         wget zstd mpv locales curl git ca-certificates jq libxcb-xinerama0 libxcb-cursor0 libnss3 \
@@ -11,6 +11,7 @@ RUN useradd -m anki
 
 # Anki installation
 RUN mkdir /app && chown -R anki /app
+COPY startup.sh /app/startup.sh
 WORKDIR /app
 
 RUN wget -O ANKI.tar.zst --no-check-certificate https://github.com/ankitects/anki/releases/download/${ANKI_VERSION}/anki-${ANKI_VERSION}-linux-qt${QT_VERSION}.tar.zst && \
@@ -43,7 +44,8 @@ WORKDIR /app
 RUN git clone -b ${ANKICONNECT_VERSION} --single-branch -n --depth=1 --filter=tree:0 \
         https://git.foosoft.net/alex/anki-connect.git && \
         cd anki-connect && git sparse-checkout set --no-cone plugin && git checkout
-RUN ln -s -f /app/anki-connect/plugin /data/addons21/AnkiConnectDev
+RUN chown -R anki:anki /app/anki-connect/plugin && \
+    ln -s -f /app/anki-connect/plugin /data/addons21/AnkiConnectDev
 
 # Edit AnkiConnect config
 RUN jq '.webBindAddress = "0.0.0.0"' /data/addons21/AnkiConnectDev/config.json > tmp_file && \
@@ -51,11 +53,11 @@ RUN jq '.webBindAddress = "0.0.0.0"' /data/addons21/AnkiConnectDev/config.json >
 
 USER anki
 
+ENV ANKICONNECT_WILDCARD_ORIGIN="0"
 ENV QMLSCENE_DEVICE=softwarecontext
 ENV FONTCONFIG_PATH=/etc/fonts
 ENV QT_XKB_CONFIG_ROOT=/usr/share/X11/xkb
 ENV QT_QPA_PLATFORM="vnc"
 # Could also use "offscreen"
 
-WORKDIR /app/anki-${ANKI_VERSION}-linux-qt${QT_VERSION}
-CMD ["anki", "-b", "/data"]
+CMD ["/bin/bash", "startup.sh"]
