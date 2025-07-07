@@ -14,4 +14,4 @@ else
     fi
 fi
 
-anki -b /data
+/app/pyenv/bin/anki -b /data
