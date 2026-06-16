@@ -46,8 +46,8 @@ Different versions of each component (Anki, QT, AnkiConnect) can be installed.
 Supply those versions as build flags:
 ```bash
 docker build \
-    --build-arg ANKICONNECT_VERSION=25.2.25.0 \
-    --build-arg ANKI_VERSION=25.02.4 \
+    --build-arg ANKICONNECT_VERSION=25.11.9.0 \
+    --build-arg ANKI_VERSION=25.02.7 \
     --build-arg QT_VERSION=6 \
     -t headless-anki:custom \
     .
