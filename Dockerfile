@@ -1,12 +1,12 @@
 ARG ANKICONNECT_VERSION=25.11.9.0
-ARG ANKI_VERSION=25.02.7
-ARG QT_VERSION=6
+ARG ANKI_VERSION=26.05
+ARG ARCH=x86_64
 
 # --- Build: Install Anki and AnkiConnect ---
 FROM debian:13-slim AS build
 ARG ANKICONNECT_VERSION
 ARG ANKI_VERSION
-ARG QT_VERSION
+ARG ARCH
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
         ca-certificates curl zstd \
@@ -15,10 +15,10 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 RUN set -eux; \
     # Anki desktop bundle -> /usr/local
     curl -fL -o /tmp/anki.tar.zst \
-        "https://github.com/ankitects/anki/releases/download/${ANKI_VERSION}/anki-${ANKI_VERSION}-linux-qt${QT_VERSION}.tar.zst"; \
+        "https://github.com/ankitects/anki/releases/download/${ANKI_VERSION}/anki-${ANKI_VERSION}-linux-${ARCH}.tar.zst"; \
     mkdir -p /tmp/anki; \
     tar -x --zstd -f /tmp/anki.tar.zst -C /tmp/anki --strip-components=1; \
-    ( cd /tmp/anki && sed 's/xdg-mime/#/' install.sh | sh - ); \
+    ( cd /tmp/anki && sed 's/xdg-mime/#/' install.sh | bash - ); \
     # AnkiConnect plugin
     mkdir -p /app/anki-connect; \
     curl -fL "https://git.sr.ht/~foosoft/anki-connect/archive/${ANKICONNECT_VERSION}.tar.gz" \
@@ -31,6 +31,7 @@ FROM debian:13-slim
 RUN apt-get update && apt-get install --no-install-recommends -y \
         ca-certificates jq mpv \
         libnss3 libxcb-xinerama0 libxcb-cursor0 \
+        libxcb-icccm4 libxcb-keysyms1 \
         libxcomposite1 libxdamage1 libxtst6 libxkbcommon0 libxkbfile1 \
     && rm -rf /var/lib/apt/lists/*
 
@@ -60,6 +61,5 @@ ENV QMLSCENE_DEVICE=softwarecontext
 ENV FONTCONFIG_PATH=/etc/fonts
 ENV QT_XKB_CONFIG_ROOT=/usr/share/X11/xkb
 ENV QT_QPA_PLATFORM="vnc"
-# Could also use "offscreen"
 
 CMD ["/bin/bash", "/app/startup.sh"]
